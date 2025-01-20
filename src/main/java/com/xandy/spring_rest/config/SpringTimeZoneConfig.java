@@ -1,4 +1,4 @@
-package com.xandy.spring_rest.domains;
+package com.xandy.spring_rest.config;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;
