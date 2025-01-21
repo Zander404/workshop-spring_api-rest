@@ -2,7 +2,6 @@ package com.xandy.spring_rest.services;
 
 import com.xandy.spring_rest.entities.User;
 import com.xandy.spring_rest.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +26,18 @@ public class UserService {
         return repository.findAll();
     }
 
-    public User updatePassword(Long id, String newPassword) {
+    public User updatePassword(Long id, String newPassword, String password, String confirmPassword) {
+        if (!password.equals(confirmPassword)) {
+            throw new RuntimeException("Passwords don't match");
+        }
+
         User user = findById(id);
+        if (!password.equals(confirmPassword)) {
+            throw new RuntimeException("Passwords don't match");
+        }
+
         user.setPassword(newPassword);
-        return repository.save(user);
+
+        return user;
     }
 }

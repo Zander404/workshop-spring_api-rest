@@ -29,7 +29,7 @@ public class User implements Serializable {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.ROLE_USER;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
