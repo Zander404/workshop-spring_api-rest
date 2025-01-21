@@ -5,7 +5,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 1234567
-      MYSQL_DATABASE: aulajpa
+      MYSQL_DATABASE: demo
       MYSQL_USER: dev
       MYSQL_PASSWORD: 12345667
     ports:
