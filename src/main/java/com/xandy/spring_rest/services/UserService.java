@@ -1,8 +1,10 @@
 package com.xandy.spring_rest.services;
 
 import com.xandy.spring_rest.entities.User;
+import com.xandy.spring_rest.exceptions.UsernameUniqueViolationException;
 import com.xandy.spring_rest.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +16,13 @@ public class UserService {
 
 
     public User save(User user) {
+        try{
+
 
         return repository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            throw new UsernameUniqueViolationException(String.format(" Username: {%s} already in use", user.getUsername()));
+        }
     }
 
     public User findById(Long id) {

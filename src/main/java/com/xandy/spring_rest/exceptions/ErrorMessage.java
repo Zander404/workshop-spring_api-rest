@@ -1,8 +1,10 @@
 package com.xandy.spring_rest.exceptions;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -10,16 +12,16 @@ import org.springframework.validation.FieldError;
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter @Setter @ToString
 public class ErrorMessage {
 
     private String path;
     private String method;
     private int status;
     private String statusText;
-    @Getter
-    @Setter
     private String message;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Map<String, String> error;
 
     public ErrorMessage(HttpServletRequest request, HttpStatus status, String message) {

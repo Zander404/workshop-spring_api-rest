@@ -6,7 +6,13 @@ import com.xandy.spring_rest.dto.UserPasswordDTO;
 import com.xandy.spring_rest.dto.UserResponseDTO;
 import com.xandy.spring_rest.dto.mapper.UserMapper;
 import com.xandy.spring_rest.entities.User;
+import com.xandy.spring_rest.exceptions.ErrorMessage;
 import com.xandy.spring_rest.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Users", description = "Has all relative function to Create , Read, Update and Delete an User.")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/users")
@@ -28,6 +35,15 @@ public class UserController {
         return ResponseEntity.ok().body(UserMapper.toListDto(users));
     }
 
+    @Operation(summary = "Get a User by his ID", description = "Search in the Database a User with the Same ID value.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User found",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDTO.class))),
+
+                    @ApiResponse(responseCode = "404", description = "User with that id, is not find in the system. ",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+
+            })
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> findById(@PathVariable Long id) {
         User obj = services.findById(id);
@@ -35,12 +51,35 @@ public class UserController {
     }
 
 
+    @Operation(summary = "Create a New User", description = "Create a new User in the System.",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "User Create with success",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDTO.class))),
+
+                    @ApiResponse(responseCode = "409", description = "User already register in the database",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+
+                    @ApiResponse(responseCode = "422", description = "Resource  is not process by the system, invalid data informed!",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+            })
     @PostMapping
     public ResponseEntity<UserResponseDTO> create(@Valid @RequestBody UserCreateDTO obj) {
         User user = services.save(UserMapper.toUser(obj));
         return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDto(user));
     }
 
+    @Operation(summary = "Update the Password", description = "Update the User Password.",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Password is Updated",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class))),
+
+                    @ApiResponse(responseCode = "404", description = "User with that id, is not find in the system. ",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+
+                    @ApiResponse(responseCode = "400", description = "Passwords don't match!. ",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+
+            })
     @PatchMapping("/{id}")
     public ResponseEntity<UserResponseDTO> updatePassword(@PathVariable Long id, @RequestBody UserPasswordDTO dto) {
         User user = services.updatePassword(id, dto.getPassword(), dto.getNewPassword(), dto.getConfirmPassword());
