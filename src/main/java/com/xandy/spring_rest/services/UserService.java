@@ -7,6 +7,7 @@ import com.xandy.spring_rest.exceptions.UsernameUniqueViolationException;
 import com.xandy.spring_rest.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,14 +17,15 @@ import java.util.List;
 @Service
 public class UserService {
     private final UserRepository repository;
-    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+
 
 
     public User save(User user) {
         try{
-
-
-        return repository.save(user);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            return repository.save(user);
         } catch (DataIntegrityViolationException e) {
             throw new UsernameUniqueViolationException(String.format(" Username: {%s} already in use", user.getUsername()));
         }
@@ -43,23 +45,23 @@ public class UserService {
         }
 
         User user = findById(id);
-        if (!password.equals(confirmPassword)) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Passwords don't match");
         }
 
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
 
         return user;
     }
 
     @Transactional(readOnly = true)
     public User searchUserByName(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(String.format("User with the username '%s' found", username)));
+        return repository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(String.format("User with the username '%s' found", username)));
     }
 
     @Transactional(readOnly = true)
     public Role searchRoleByUsername(String username) {
-        return userRepository.findRoleByUsername(username);
+        return repository.findRoleByUsername(username);
 
     }
 }
