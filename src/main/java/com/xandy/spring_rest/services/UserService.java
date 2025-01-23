@@ -1,11 +1,14 @@
 package com.xandy.spring_rest.services;
 
 import com.xandy.spring_rest.entities.User;
+import com.xandy.spring_rest.entities.enums.Role;
+import com.xandy.spring_rest.exceptions.EntityNotFoundException;
 import com.xandy.spring_rest.exceptions.UsernameUniqueViolationException;
 import com.xandy.spring_rest.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,6 +16,7 @@ import java.util.List;
 @Service
 public class UserService {
     private final UserRepository repository;
+    private final UserRepository userRepository;
 
 
     public User save(User user) {
@@ -46,5 +50,16 @@ public class UserService {
         user.setPassword(newPassword);
 
         return user;
+    }
+
+    @Transactional(readOnly = true)
+    public User searchUserByName(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(String.format("User with the username '%s' found", username)));
+    }
+
+    @Transactional(readOnly = true)
+    public Role searchRoleByUsername(String username) {
+        return userRepository.findRoleByUsername(username);
+
     }
 }

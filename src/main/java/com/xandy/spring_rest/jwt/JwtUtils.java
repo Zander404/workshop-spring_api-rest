@@ -37,7 +37,7 @@ public class JwtUtils {
         return Date.from(end.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    public static JwtToken createJWT(String username, String role) {
+    public static JwtToken createToken(String username, String role) {
         Date issuedAt = toExpiredDate(new Date());
         Date limit = Date.from(issuedAt.toInstant());
 
