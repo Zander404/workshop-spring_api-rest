@@ -37,7 +37,7 @@ public class JwtUtils {
         return Date.from(end.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    public static String createJWT(String username, String role) {
+    public static JwtToken createJWT(String username, String role) {
         Date issuedAt = toExpiredDate(new Date());
         Date limit = Date.from(issuedAt.toInstant());
 
@@ -53,17 +53,40 @@ public class JwtUtils {
     }
 
 
-    public static Claims getClaimsFromToken(String token) {
+    private static Claims getClaimsFromToken(String token) {
         try {
-
-            return Jwts.parserBuilder()
+            return Jwts.parser()
                     .setSigningKey(generateKey()).build()
-                    .parseClaimsJws().getBody();
+                    .parseClaimsJws(refactorToken(token)).getBody();
         } catch (JwtException e) {
             log.error(String.format("Invalid JWT token: %s", token), e);
-
         }
+        return null;
+
     }
 
+    public static String getUserNameFromToken(String token) {
+        return getClaimsFromToken(token).getSubject();
+    }
+
+    public static boolean validateToken(String token) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(generateKey()).build()
+                    .parseClaimsJws(refactorToken(token));
+            return true;
+        } catch (JwtException e) {
+            log.error(String.format("Invalid JWT token: %s", token), e);
+        }
+        return false;
+
+    }
+
+    private static String refactorToken(String token) {
+        if (token.contains(JWT_BEARED)) {
+            return token.substring(JWT_BEARED.length());
+        }
+        return token;
+    }
 
 }
