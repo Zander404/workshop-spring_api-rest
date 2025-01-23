@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 
 import java.util.Collection;
 
+
 public class JwtUserDetails extends org.springframework.security.core.userdetails.User {
 
     private User user;
