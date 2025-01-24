@@ -21,7 +21,7 @@ public class JwtUtils {
     public static final String SECRET_KEY = "0123456789-0123456789-0123456789";
     public static final long EXPIRED_DAYS = 0;
     public static final long EXPIRED_HOURS = 0;
-    public static final long EXPIRED_MINUTES = 2;
+    public static final long EXPIRED_MINUTES = 10;
 
     private JwtUtils() {
 
