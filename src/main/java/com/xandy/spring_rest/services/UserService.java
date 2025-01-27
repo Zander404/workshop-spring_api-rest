@@ -3,6 +3,7 @@ package com.xandy.spring_rest.services;
 import com.xandy.spring_rest.entities.User;
 import com.xandy.spring_rest.entities.enums.Role;
 import com.xandy.spring_rest.exceptions.EntityNotFoundException;
+import com.xandy.spring_rest.exceptions.PasswordInvalidException;
 import com.xandy.spring_rest.exceptions.UsernameUniqueViolationException;
 import com.xandy.spring_rest.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,21 +33,25 @@ public class UserService {
     }
 
     public User findById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("User not Find"));
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not Find"));
     }
 
     public List<User> getAll() {
         return repository.findAll();
     }
 
-    public User updatePassword(Long id, String newPassword, String password, String confirmPassword) {
-        if (!password.equals(confirmPassword)) {
-            throw new RuntimeException("Passwords don't match");
+    public User updatePassword(Long id, String password, String newPassword, String confirmPassword) {
+        if (!newPassword.equals(confirmPassword)) {
+            throw new PasswordInvalidException("New Password don't match");
         }
 
         User user = findById(id);
+        System.out.println("password: " + password);
+        System.out.println("newPassword: " + newPassword);
+        System.out.println("confirmPassword: " + confirmPassword);
+        System.out.println("user: " + user.getPassword());
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Passwords don't match");
+            throw new PasswordInvalidException("Your Actual Password is incorrect");
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));

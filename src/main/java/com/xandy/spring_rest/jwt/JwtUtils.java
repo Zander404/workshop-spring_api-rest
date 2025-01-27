@@ -16,7 +16,7 @@ import java.util.Date;
 @Slf4j
 public class JwtUtils {
 
-    public static final String JWT_BEARED = "Bearer ";
+    public static final String JWT_BEARER = "Bearer ";
     public static final String JWT_AUTHORIZATION = "Authorization";
     public static final String SECRET_KEY = "0123456789-0123456789-0123456789";
     public static final long EXPIRED_DAYS = 0;
@@ -44,7 +44,8 @@ public class JwtUtils {
         String token = Jwts.builder()
                 .setHeaderParam("typ", "JWT")
                 .setSubject(username)
-                .setIssuedAt(limit)
+                .setIssuedAt(issuedAt)
+                .setExpiration(limit)
                 .signWith(generateKey(), SignatureAlgorithm.HS256)
                 .claim("role", role)
                 .compact();
@@ -55,7 +56,7 @@ public class JwtUtils {
 
     private static Claims getClaimsFromToken(String token) {
         try {
-            return Jwts.parser()
+            return Jwts.parserBuilder()
                     .setSigningKey(generateKey()).build()
                     .parseClaimsJws(refactorToken(token)).getBody();
         } catch (JwtException e) {
@@ -71,7 +72,7 @@ public class JwtUtils {
 
     public static boolean isTokenValid(String token) {
         try {
-            Jwts.parser()
+            Jwts.parserBuilder()
                     .setSigningKey(generateKey()).build()
                     .parseClaimsJws(refactorToken(token));
             return true;
@@ -83,8 +84,8 @@ public class JwtUtils {
     }
 
     private static String refactorToken(String token) {
-        if (token.contains(JWT_BEARED)) {
-            return token.substring(JWT_BEARED.length());
+        if (token.contains(JWT_BEARER)) {
+            return token.substring(JWT_BEARER.length());
         }
         return token;
     }

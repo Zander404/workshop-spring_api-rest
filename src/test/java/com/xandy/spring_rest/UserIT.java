@@ -109,7 +109,7 @@ public class UserIT {
                 .post()
                 .uri("/api/v1/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new UserCreateDTO("ana@gmail.com", "123456"))
+                .bodyValue(new UserCreateDTO("ana@gmail.com", "1234567"))
                 .exchange()
                 .expectStatus().isEqualTo(409)
                 .expectBody(ErrorMessage.class)
@@ -120,11 +120,12 @@ public class UserIT {
     }
 
     @Test
-    public void createUserTestGetUserByIdStatus200() {
+    public void getUserByIdStatus200() {
 
         UserResponseDTO responseBody = testClient
                 .get()
                 .uri("/api/v1/users/100")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@gmail.com", "123456"))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(UserResponseDTO.class)
@@ -138,11 +139,12 @@ public class UserIT {
     }
 
     @Test
-    public void createUserTestGetUserByIdStatus404() {
+    public void getUserByIdStatus404() {
 
         ErrorMessage responseBody = testClient
                 .get()
                 .uri("/api/v1/users/0")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@gmail.com", "123456"))
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(ErrorMessage.class)
@@ -158,8 +160,9 @@ public class UserIT {
         testClient
                 .patch()
                 .uri("/api/v1/users/100")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@gmail.com", "123456"))
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new UserPasswordDTO("123456", "123456", "123456"))
+                .bodyValue(new UserPasswordDTO("123456", "1234567", "1234567"))
                 .exchange()
                 .expectStatus().isNoContent();
     }
@@ -169,8 +172,9 @@ public class UserIT {
         ErrorMessage responseBody = testClient
                 .patch()
                 .uri("/api/v1/users/0")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@gmail.com", "123456"))
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new UserPasswordDTO("123456", "1234567", "1234567"))
+                .bodyValue(new UserPasswordDTO("", "", ""))
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(ErrorMessage.class)
@@ -178,7 +182,7 @@ public class UserIT {
 
 
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
-        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(401);
 
     }
 
@@ -186,7 +190,8 @@ public class UserIT {
     public void changePasswordInvalidFieldsTestValidStatus422() {
         ErrorMessage responseBody = testClient
                 .patch()
-                .uri("/api/v1/users/10'0")
+                .uri("/api/v1/users/100")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@gmail.com", "123456"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UserPasswordDTO("", "", ""))
                 .exchange()
