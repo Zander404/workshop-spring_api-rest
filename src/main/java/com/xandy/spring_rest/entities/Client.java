@@ -1,11 +1,11 @@
 package com.xandy.spring_rest.entities;
 
-import com.xandy.spring_rest.entities.enums.Role;
+
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -19,24 +19,26 @@ import java.util.Objects;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = "clients")
 @EntityListeners(AuditingEntityListener.class)
-public class User implements Serializable {
+public class Client implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "username", nullable = false, unique = true, length = 100)
-    private String username;
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
 
-    @Column(name = "password", nullable = false, length = 200)
-    private String password;
+    @Column(name = "cpf", nullable = false, unique = true, length = 11)
+    private String cpf;
 
-    @Enumerated(EnumType.STRING)
-    private Role role = Role.ROLE_USER;
+    @OneToOne
+    @JoinColumn(name = "id_user", nullable = false)
+    private User user;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -50,25 +52,12 @@ public class User implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id);
+        Client client = (Client) o;
+        return Objects.equals(id, client.id);
     }
 
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", role=" + role +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", createdBy='" + createdBy + '\'' +
-                ", updatedBy='" + updatedBy + '\'' +
-                '}';
     }
 }
