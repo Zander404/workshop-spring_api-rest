@@ -85,15 +85,9 @@ public class UserController {
     @Operation(summary = "Update the Password", description = "Update the User Password. REQUIRED BEARED TOKEN | PERMISSION ADMIN",
             security =  @SecurityRequirement(name = "security"),
             responses = {
-                    @ApiResponse(responseCode = "204", description = "Password is Updated",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class))),
-
+                    @ApiResponse(responseCode = "204", description = "Password is Updated"),
                     @ApiResponse(responseCode = "403", description = "User was no permission  ",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
-
-                    @ApiResponse(responseCode = "404", description = "User with that id, is not find in the system. ",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
-
                     @ApiResponse(responseCode = "400", description = "Passwords don't match!. ",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
 
