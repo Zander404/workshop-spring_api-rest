@@ -120,6 +120,33 @@ public class ClientController {
         return ResponseEntity.ok(PageableMapper.toDTO(listClients));
     }
 
+
+
+    @Operation(summary = "GET INFO about a Client", description = "Get Client INFO  | NEED AN BEARER TOKEN | ROLE: USER ",
+            security = @SecurityRequirement(name = "security"),
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "Client is Found",
+                            content = @Content(
+                                    mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ClientCreateDTO.class))
+                    ),
+                    @ApiResponse(responseCode = "403",
+                            description = "Forbidden to user access",
+                            content = @Content(
+                                    mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+            })
+    @GetMapping("/details")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<ClientResponseDTO> getDetails(@AuthenticationPrincipal JwtUserDetails userDetails) {
+        Client client = services.findByUserId(userDetails.getId());
+
+        return ResponseEntity.ok(ClientMapper.toDto(client));
+    }
+
+
     @Operation(summary = "GET an Client", description = "Get a Client by Id | NEED AN BEARER TOKEN | ROLE: ADMIN ",
             security = @SecurityRequirement(name = "security"),
             responses = {

@@ -39,4 +39,9 @@ public class ClientService {
     public Client findById(Long id) {
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Client id:%s Can't be found", id)));
     }
+
+    @Transactional(readOnly = true)
+    public Client findByUserId(Long id) {
+        return repository.findByUserId(id);
+    }
 }
