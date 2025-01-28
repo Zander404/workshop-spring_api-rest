@@ -20,7 +20,7 @@ public class ClientService {
         try {
             return repository.save(client);
         } catch (DataIntegrityViolationException e) {
-            throw new CpfUniqueException(String.format("CPF: %s .Can't be saved, An user already is using this CPF", client.getCpf()));
+            throw new CpfUniqueException(String.format("CPF: %s Can't be saved, An user already is using this CPF", client.getCpf()));
         }
     }
 }
