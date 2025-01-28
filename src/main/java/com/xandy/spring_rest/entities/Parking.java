@@ -1,6 +1,13 @@
 package com.xandy.spring_rest.entities;
 
-import com.xandy.spring_rest.entities.enums.Role;
+
+
+import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Objects;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,31 +18,24 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Objects;
-
-
-@Getter
-@Setter
+@Getter @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = "parking")
 @EntityListeners(AuditingEntityListener.class)
-public class User implements Serializable {
+public class Parking implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    private String id;
 
-    @Column(name = "username", nullable = false, unique = true, length = 100)
-    private String username;
+    @Column(name="code", unique = true, nullable = false, length = 4)
+    private String code;
 
-    @Column(name = "password", nullable = false, length = 200)
-    private String password;
-
+    @Column(name="status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Role role = Role.ROLE_USER;
+    private String status;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -49,8 +49,8 @@ public class User implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id);
+        Parking parking = (Parking) o;
+        return Objects.equals(id, parking.id);
     }
 
     @Override
@@ -58,16 +58,4 @@ public class User implements Serializable {
         return Objects.hashCode(id);
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", role=" + role +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", createdBy='" + createdBy + '\'' +
-                ", updatedBy='" + updatedBy + '\'' +
-                '}';
-    }
 }
