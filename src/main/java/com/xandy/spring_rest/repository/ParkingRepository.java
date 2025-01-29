@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface ParkingRepository extends JpaRepository<Parking, Long> {
 
-    Optional<Parking> findyByCode(String code);
+    Optional<Parking> findByCode(String code);
+
 }

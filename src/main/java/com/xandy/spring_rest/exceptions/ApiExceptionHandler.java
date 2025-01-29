@@ -36,7 +36,7 @@ public class ApiExceptionHandler {
                 .body(new ErrorMessage(request, HttpStatus.UNPROCESSABLE_ENTITY, exception.getMessage()));
     }
 
-    @ExceptionHandler({UsernameUniqueViolationException.class, CpfUniqueException.class, CodeUniqueViolation.class})
+    @ExceptionHandler({UsernameUniqueViolationException.class, CpfUniqueException.class})
     public ResponseEntity<ErrorMessage> usernameUniqueViolationException(RuntimeException exception, HttpServletRequest request) {
 
         log.error("Api Error - ", exception);

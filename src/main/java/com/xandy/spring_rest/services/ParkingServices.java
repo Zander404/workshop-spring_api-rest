@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @RequiredArgsConstructor
 @Service
 public class ParkingServices {
@@ -27,6 +28,6 @@ public class ParkingServices {
 
     @Transactional(readOnly = true)
     public Parking searchByCode(String code) {
-        return repository.findyByCode(code).orElseThrow(() -> new EntityNotFoundException(String.format(" Parking Space with code %s is not find", code)));
+        return repository.findByCode(code).orElseThrow(() -> new EntityNotFoundException(String.format(" Parking Space with code %s is not find", code)));
     }
 }
