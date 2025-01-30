@@ -12,8 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @Service
 public class ClientService {
@@ -43,5 +41,13 @@ public class ClientService {
     @Transactional(readOnly = true)
     public Client findByUserId(Long id) {
         return repository.findByUserId(id);
+    }
+
+
+    @Transactional(readOnly = true)
+    public Client findByCpf(String cpf) {
+        return repository.findByCpf(cpf).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Client with CPF: %s is not find ", cpf))
+        );
     }
 }

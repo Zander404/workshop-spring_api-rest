@@ -18,9 +18,9 @@ import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @Entity
-@Table(name = "parkings")
+@Table(name = "spots")
 @EntityListeners(AuditingEntityListener.class)
-public class Parking implements Serializable {
+public class Spot implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,8 +46,8 @@ public class Parking implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Parking parking = (Parking) o;
-        return Objects.equals(id, parking.id);
+        Spot spot = (Spot) o;
+        return Objects.equals(id, spot.id);
     }
 
     @Override
