@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SpotCreateDTO {
 
-    @NotBlank
-    @Size(min=4, max=4)
+    @NotBlank(message = "{NotBlank.spotCreateDTO.code}")
+    @Size(min=4, max=4, message = "{Size.spotCreateDTO.code}")
     private String code;
 
-    @NotBlank
-    @Pattern(regexp = "FREE|OCCUPIED")
+    @NotBlank( message = "{NotBlank.spotCreateDTO.status}")
+    @Pattern(regexp = "FREE|OCCUPIED", message = "{Pattern.spotCreateDTO.status}")
     private String status;
 
 }
