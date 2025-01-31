@@ -41,6 +41,6 @@ public class ParkingIT {
                 .jsonPath("color").isEqualTo("Blue")
                 .jsonPath("clientCpf").isEqualTo("44747485066")
                 .jsonPath("ticket").exists()
-                .jsonPath("checkInDate").exists();f
+                .jsonPath("checkInDate").exists();
     }
 }
